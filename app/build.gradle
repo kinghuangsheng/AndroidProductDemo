@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt' // 注释处理
+
+//创建当前时间字符创 比如 0411_1213 表示 4月11号，12点13分
+def buildTime() {
+    def date = new Date()
+    def formattedDate = date.format('MMdd_HHmm')
+    return formattedDate
+}
+
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "21.0.1"
+    defaultConfig {
+        applicationId "com.product.demo"
+        minSdkVersion 17
+        targetSdkVersion 17
+        versionCode 1
+        versionName "1.0"
+
+        //在BuildConfig里面创建BUILD_TIME变量，代表apk编译时间
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime()}\""
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    // 注释冲突
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    // dagger2
+    compile 'com.google.dagger:dagger:2.0.2'
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    compile 'de.greenrobot:greendao:2.1.0'
+    compile 'io.reactivex:rxandroid:1.2.0'
+    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.okio:okio:1.8.0'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+    compile 'com.google.code.gson:gson:2.6.2'
+    // Retrofit的gson库
+    provided 'javax.annotation:jsr250-api:1.0'
+    compile 'com.jakewharton:butterknife:8.0.1'
+    apt 'com.jakewharton:butterknife-compiler:8.0.1'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+}
