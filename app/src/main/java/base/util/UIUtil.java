@@ -23,9 +23,9 @@ public final class UIUtil {
 
     private static float widthRate = 1;
 
-    private static int screenHeight = 480;
+    private static int screenHeight = 800;
 
-    private static int screenWidth = 800;
+    private static int screenWidth = 480;
 
     private static Activity activity;
 

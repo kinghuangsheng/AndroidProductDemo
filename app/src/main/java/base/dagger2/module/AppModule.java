@@ -4,8 +4,8 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 
-import com.product.demo.greendao.dao.DaoMaster;
-import com.product.demo.greendao.dao.DaoSession;
+import com.product.demo.greendao.DaoMaster;
+import com.product.demo.greendao.DaoSession;
 import com.product.demo.retrofit.service.RequestService;
 
 import javax.inject.Singleton;
@@ -26,8 +26,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class AppModule {
 
-    public final static String BASE_URL = "";
-    public final static String DB_NAME = "";
+    public final static String BASE_URL = "http://www.baidu.com";
+    public final static String DB_NAME = "demo.db";
 
     private App app;
 
