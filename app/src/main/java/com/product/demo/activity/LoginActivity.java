@@ -30,7 +30,8 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        accountET.setSelection(accountET.getText().length());
+        passwordET.setSelection(passwordET.getText().length());
     }
 
     @OnClick(R.id.btn_login)

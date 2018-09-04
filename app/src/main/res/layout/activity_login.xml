@@ -24,7 +24,7 @@
             android:textColor="@color/common_text_color"
             android:textSize="@dimen/common_text_size"
             android:id="@+id/et_account"
-            android:text="Hello World!" />
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,17 +41,30 @@
             android:textColor="@color/common_text_color"
             android:textSize="@dimen/common_text_size"
             android:id="@+id/et_password"
-            android:text="Hello World!" />
+            />
     </LinearLayout>
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/common_text_color"
-        android:textSize="@dimen/common_text_size"
-        android:text="@string/login"
-        android:id="@+id/btn_login"
-        />
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_color"
+            android:textSize="@dimen/common_text_size"
+            android:text="@string/save_password"
+            android:id="@+id/cb_save_password"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_color"
+            android:textSize="@dimen/common_text_size"
+            android:text="@string/login"
+            android:id="@+id/btn_login"
+            />
+    </LinearLayout>
+
 
 
 </LinearLayout>
