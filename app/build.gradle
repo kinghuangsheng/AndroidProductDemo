@@ -3,13 +3,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+
     }
 }
 
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt' // 注释处理
 
 //创建当前时间字符创 比如 0411_1213 表示 4月11号，12点13分
 def buildTime() {
@@ -21,7 +20,7 @@ def buildTime() {
 
 android {
     compileSdkVersion 17
-    buildToolsVersion "21.0.1"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.product.demo"
         minSdkVersion 17
@@ -55,7 +54,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // dagger2
     compile 'com.google.dagger:dagger:2.0.2'
-    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.0.2'
     compile 'de.greenrobot:greendao:2.1.0'
     compile 'io.reactivex:rxandroid:1.2.0'
     compile 'io.reactivex:rxjava:1.1.5'
@@ -69,7 +68,7 @@ dependencies {
     // Retrofit的gson库
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.jakewharton:butterknife:8.0.1'
-    apt 'com.jakewharton:butterknife-compiler:8.0.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
