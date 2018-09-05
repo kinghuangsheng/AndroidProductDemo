@@ -82,21 +82,21 @@ public final class UIUtil {
      * Layout View适配
      */
     public static View viewScreenAdapter(final View view) {
-        if (view instanceof ViewGroup) {
-            int count = ((ViewGroup) view).getChildCount();
-            for (int i = 0; i < count; i++) {
-                final View childView = ((ViewGroup) view).getChildAt(i);
-                if (childView instanceof ViewGroup) {
-                    remeasure(childView);
-                    viewScreenAdapter((ViewGroup) childView);
-                } else {
-                    remeasure(childView);
-                }
-            }
-
-        } else {
-            remeasure(view);
-        }
+//        if (view instanceof ViewGroup) {
+//            int count = ((ViewGroup) view).getChildCount();
+//            for (int i = 0; i < count; i++) {
+//                final View childView = ((ViewGroup) view).getChildAt(i);
+//                if (childView instanceof ViewGroup) {
+//                    remeasure(childView);
+//                    viewScreenAdapter((ViewGroup) childView);
+//                } else {
+//                    remeasure(childView);
+//                }
+//            }
+//
+//        } else {
+//            remeasure(view);
+//        }
         return view;
     }
 

@@ -1,6 +1,7 @@
 package base.dagger2.component;
 
 import com.product.demo.activity.LoginActivity;
+import com.product.demo.activity.MainActivity;
 
 import base.android.BaseActivity;
 import base.dagger2.module.ActivityModule;
@@ -12,4 +13,5 @@ import dagger.Subcomponent;
 public interface ActivityComponent {
     void inject(BaseActivity act);
     void inject(LoginActivity act);
+    void inject(MainActivity act);
 }

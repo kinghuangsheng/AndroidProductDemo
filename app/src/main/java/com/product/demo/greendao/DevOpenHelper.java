@@ -32,12 +32,12 @@ public class DevOpenHelper extends DatabaseOpenHelper {
             try {
                 AbsUpgradeOperation absUpgradeOperation = (AbsUpgradeOperation) Class.forName("com.sn.db.upgrade.UpgradeFrom" + i + "To"+ (i + 1)).newInstance();
                 if (absUpgradeOperation != null) {
-                    LogUtil.i(this, "数据库升级 from " + i + " to " + (i + 1));
+                    LogUtil.info(this, "数据库升级 from " + i + " to " + (i + 1));
                     absUpgradeOperation.onUpgrade(db);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtil.i(this, "数据库升级失败 from " + i + " to " + (i + 1));
+                LogUtil.info(this, "数据库升级失败 from " + i + " to " + (i + 1));
                 break;
             }
         }
