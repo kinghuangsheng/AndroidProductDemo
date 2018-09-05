@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.product.demo.greendao.DaoMaster;
 import com.product.demo.greendao.DaoSession;
+import com.product.demo.greendao.DevOpenHelper;
 import com.product.demo.retrofit.service.RequestService;
 
 import javax.inject.Singleton;
@@ -26,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class AppModule {
 
-    public final static String BASE_URL = "http://www.baidu.com";
+    public final static String BASE_URL = "http://10.25.98.34:8761";
     public final static String DB_NAME = "demo.db";
 
     private App app;
@@ -54,7 +55,7 @@ public class AppModule {
     @Singleton
     @Provides
     public DaoSession provideDaoSession(){
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(app,
+        DevOpenHelper helper = new DevOpenHelper(app,
                 DB_NAME, null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);

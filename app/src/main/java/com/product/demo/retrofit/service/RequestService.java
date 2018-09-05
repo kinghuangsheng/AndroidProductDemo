@@ -21,4 +21,7 @@ public interface RequestService {
                                                 @Query("longitude") String longitude, @Query("latitude") String latitude, @Query("alarmSituationId") String alarmSituationId,
                                                 @Query("signTime") String signTime, @PartMap Map<String, RequestBody> params);
 
+    @POST("/apitest")
+    Observable<String> apitest();
+
 }

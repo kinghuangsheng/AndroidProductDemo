@@ -7,6 +7,7 @@ import com.product.demo.R;
 import com.product.demo.greendao.DaoSession;
 import com.product.demo.greendao.UserDao;
 import com.product.demo.greendao.entity.User;
+import com.product.demo.retrofit.service.RequestService;
 
 import javax.inject.Inject;
 
@@ -20,6 +21,9 @@ public class LoginActivity extends BaseActivity {
 
     @Inject
     DaoSession daoSession;
+
+    @Inject
+    RequestService requestService;
 
     @BindView(R.id.et_account)
     EditText accountET;
