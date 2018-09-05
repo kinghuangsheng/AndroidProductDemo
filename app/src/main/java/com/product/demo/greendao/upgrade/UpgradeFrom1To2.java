@@ -1,7 +1,5 @@
 package com.product.demo.greendao.upgrade;
 
-import com.lidroid.xutils.DbUtils;
-
 import org.greenrobot.greendao.database.Database;
 
 /**
