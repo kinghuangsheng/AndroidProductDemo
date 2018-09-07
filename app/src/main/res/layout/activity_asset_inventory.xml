@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_left_right_padding"
+    android:paddingLeft="@dimen/activity_left_right_padding"
+    android:paddingRight="@dimen/activity_left_right_padding"
+    android:paddingTop="@dimen/activity_left_right_padding">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_text_color"
+                android:textSize="@dimen/common_text_size"
+                android:text="盘点到资产："
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="500px"
+            android:layout_marginTop="20px"
+            android:textColor="@color/common_text_color"
+            android:textSize="@dimen/common_text_size"
+            android:id="@+id/tv_inventory"
+            />
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50px"
+        android:textColor="@color/common_text_color"
+        android:textSize="@dimen/common_text_size"
+        android:text="开始"
+        android:id="@+id/btn_start"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50px"
+        android:textColor="@color/common_text_color"
+        android:textSize="@dimen/common_text_size"
+        android:text="停止"
+        android:id="@+id/btn_stop"
+        />
+</LinearLayout>

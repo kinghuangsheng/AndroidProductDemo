@@ -15,8 +15,8 @@ public abstract class BaseActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutViewID());
-        UIUtil.initScreenRate(this);
-        UIUtil.activityScreenAdapter(this);
+//        UIUtil.initScreenRate(this);
+//        UIUtil.activityScreenAdapter(this);
         ButterKnife.bind(this);
         dagger2Inject(App.getInstance().getAppComponent().createActivityComponent(new ActivityModule()));
     }

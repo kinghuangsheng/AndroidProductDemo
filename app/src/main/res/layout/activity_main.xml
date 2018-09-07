@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,55 +8,62 @@
     android:paddingLeft="@dimen/activity_left_right_padding"
     android:paddingRight="@dimen/activity_left_right_padding"
     android:paddingTop="@dimen/activity_left_right_padding">
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/common_text_color"
-        android:textSize="@dimen/common_text_size"
-        android:text="上电"
-        android:id="@+id/btn_open_close"
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/common_text_color"
-        android:textSize="@dimen/common_text_size"
-        android:text="读取"
-        android:id="@+id/btn_read"
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/common_text_color"
-        android:textSize="@dimen/common_text_size"
-        android:text="读取"
-        android:id="@+id/btn_write"
-        />
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/common_text_color"
+                android:textSize="@dimen/common_text_size"
+                android:text="标签写入"
+                android:id="@+id/btn_write_tag"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/common_text_color"
+                android:textSize="@dimen/common_text_size"
+                android:text="资产盘点"
+                android:id="@+id/btn_asset_inventory"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/common_text_color"
+                android:textSize="@dimen/common_text_size"
+                android:text="数据导入"
+                android:id="@+id/btn_data_import"
+                />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/common_text_color"
-        android:textSize="@dimen/common_text_size"
-        android:text="盘点"
-        android:id="@+id/btn_inventory"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:textColor="@color/common_text_color"
-        android:textSize="@dimen/common_text_size"
-        android:text="扫描"
-        android:id="@+id/btn_scan"
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/common_text_color"
-        android:textSize="@dimen/common_text_size"
-        android:text="导入"
-        android:id="@+id/btn_import"
-        />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/common_text_color"
+                android:textSize="@dimen/common_text_size"
+                android:text="设置"
+                android:id="@+id/btn_setting"
+                />
+        </LinearLayout>
+    </LinearLayout>
 
-
-</LinearLayout>
+</RelativeLayout>
