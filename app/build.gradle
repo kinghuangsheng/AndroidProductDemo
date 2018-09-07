@@ -7,6 +7,12 @@ buildscript {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.android.application'
 
@@ -19,12 +25,12 @@ def buildTime() {
 
 
 android {
-    compileSdkVersion 17
+    compileSdkVersion 25
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.product.demo"
         minSdkVersion 17
-        targetSdkVersion 17
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
 
@@ -76,15 +82,10 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.jakewharton:butterknife:8.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
-    compile 'com.android.support:support-v4:23.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
-    implementation files('libs/poi-3.17.jar')
-    implementation files('libs/poi-ooxml-3.17.jar')
-    implementation files('libs/commons-collections4-4.2.jar')
-    implementation files('libs/rt.jar')
-    implementation files('libs/poi-ooxml-schemas-3.17.jar')
-    implementation files('libs/xmlbeans-3.0.1.jar')
-    implementation files('libs/jxl-2.6.12.jar')
+    // https://mvnrepository.com/artifact/org.apache.poi/poi
+    compile 'com.speedata:libuhf:7.6.4'
+    compile(name: 'scandecode-release', ext: 'aar')
 
 }

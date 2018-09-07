@@ -9,6 +9,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,12 +37,14 @@ public class PoiExcelUtil {
                 //获取行,行号作为参数传递给getRow方法,第一行从0开始计算
                 HSSFRow row = sheet.getRow(i);
                 //获取单元格,row已经确定了行号,列号作为参数传递给getCell,第一列从0开始计算
+                HSSFCell cell = row.getCell(0);
                 //设置单元格的值,即C1的值(第一行,第三列)
-                row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
-                String rowAccount = row.getCell(0).toString();
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+                String rowAccount = cell.getStringCellValue();
                 if(account.equals(rowAccount)){
-                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-                    if(password.equals(row.getCell(1).toString())){
+                    cell = row.getCell(1);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(password.equals(cell.getStringCellValue())){
                         return true;
                     }
                 }else{
