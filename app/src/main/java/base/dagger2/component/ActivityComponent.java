@@ -1,7 +1,9 @@
 package base.dagger2.component;
 
+import com.product.demo.activity.AssetsDetailActivity;
 import com.product.demo.activity.AssetInventoryActivity;
 import com.product.demo.activity.DataImportActivity;
+import com.product.demo.activity.AssetsListActivity;
 import com.product.demo.activity.LoginActivity;
 import com.product.demo.activity.MainActivity;
 import com.product.demo.activity.TestActivity;
@@ -21,5 +23,7 @@ public interface ActivityComponent {
     void inject(WriteTagActivity act);
     void inject(AssetInventoryActivity act);
     void inject(DataImportActivity act);
+    void inject(AssetsListActivity act);
+    void inject(AssetsDetailActivity act);
     void inject(TestActivity act);
 }

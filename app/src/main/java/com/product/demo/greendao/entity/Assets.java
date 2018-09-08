@@ -4,16 +4,20 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.io.Serializable;
+
 /**
  * Created by huangsheng on 2018/9/6.
  */
 
 @Entity
-public class Assets {
+public class Assets implements Serializable{
 
     public final static int STATUS_IMPORT = 1;
     public final static int STATUS_MATCH = 2;
     public final static int STATUS_SCAN = 3;
+
+    private static final long serialVersionUID = -3928832861296252415L;
 
     @Id(autoincrement = true)
     private Long id;
@@ -249,5 +253,9 @@ public class Assets {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public boolean inventorySuccess() {
+        return status == STATUS_MATCH;
     }
 }

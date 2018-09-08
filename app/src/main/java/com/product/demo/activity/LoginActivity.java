@@ -13,6 +13,7 @@ import com.product.demo.exception.BusinessException;
 import com.product.demo.greendao.DaoSession;
 import com.product.demo.greendao.entity.User;
 import com.product.demo.retrofit.service.RequestService;
+import com.product.demo.util.JxlExcelUtil;
 import com.product.demo.util.Poi2007ExcelUtil;
 import com.product.demo.util.PoiExcelUtil;
 
@@ -96,7 +97,7 @@ public class LoginActivity extends BaseActivity {
         Single.fromCallable(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                if(new PoiExcelUtil().checkUser(account, password)){
+                if(new JxlExcelUtil().checkUser(account, password)){
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(Constants.SHAREDPREFERENCES_KEY_ACCOUNT, account);
                     editor.putString(Constants.SHAREDPREFERENCES_KEY_PASSWORD, password);

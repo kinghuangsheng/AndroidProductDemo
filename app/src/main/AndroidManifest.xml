@@ -11,7 +11,10 @@
         android:theme="@android:style/Theme.Light.NoTitleBar"
         >
         <activity android:name="com.product.demo.activity.LoginActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name="com.product.demo.activity.WriteTagActivity">
         </activity>
@@ -22,10 +25,10 @@
         <activity android:name="com.product.demo.activity.TestActivity">
         </activity>
         <activity android:name="com.product.demo.activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </activity>
+        <activity android:name="com.product.demo.activity.AssetsDetailActivity">
+        </activity>
+        <activity android:name="com.product.demo.activity.AssetsListActivity">
         </activity>
     </application>
 

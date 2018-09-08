@@ -25,7 +25,7 @@ public class JxlExcelUtil {
     public boolean checkUser(String account, String password){
         FileInputStream fis = null;
         try {
-            String fileName = Environment.getExternalStorageDirectory() + "/user.xlsx";
+            String fileName = Environment.getExternalStorageDirectory() + "/user.xls";
             fis = new FileInputStream(new File(fileName));
             //通过构造函数传参
             Workbook book = Workbook.getWorkbook(fis);
