@@ -7,6 +7,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.product.demo.R;
+import com.product.demo.greendao.AssetsDao;
+import com.product.demo.greendao.DaoSession;
+import com.product.demo.greendao.entity.Assets;
+import com.product.demo.greendao.entity.BarCode;
 import com.product.demo.util.ByteUtil;
 import com.scandecode.ScanDecode;
 import com.scandecode.inf.ScanInterface;
@@ -42,6 +46,8 @@ public class AssetInventoryActivity extends BaseActivity {
 
     @BindView(R.id.tv_inventory)
     TextView inventoryTV;
+    @BindView(R.id.tv_match_result)
+    TextView matchResultTV;
     @BindView(R.id.btn_start)
     Button startBtn;
     @BindView(R.id.btn_stop)
@@ -49,6 +55,8 @@ public class AssetInventoryActivity extends BaseActivity {
 
     @Inject
     ToastUtil toastUtil;
+    @Inject
+    DaoSession daoSession;
 
     SpdInventoryData curSpdInventoryData;
 
@@ -74,6 +82,8 @@ public class AssetInventoryActivity extends BaseActivity {
 
     @OnClick(R.id.btn_start)
     public void start(){
+        matchResultTV.setText("");
+        inventoryTV.setText("");
         inventoryStart();
     }
 
@@ -167,7 +177,36 @@ public class AssetInventoryActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    inventoryTV.setText(realData);
+                                    AssetsDao assetsDao = daoSession.getAssetsDao();
+                                    Assets assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(realData),
+                                            AssetsDao.Properties.Status.notEq(Assets.STATUS_SCAN)).unique();
+                                    if(assets != null){
+                                        matchResultTV.setText("匹配成功");
+                                        inventoryTV.setText("标签:" + realData);
+                                        inventoryTV.append("\n");
+                                        inventoryTV.append("\n资产名称：" + assets.getName());
+                                        inventoryTV.append("\n资产编码：" + assets.getCode());
+                                        inventoryTV.append("\n资产序列号：" + assets.getSerialNumber());
+                                        inventoryTV.append("\n资产供应商：" + assets.getSupplier());
+                                        inventoryTV.append("\n资产维保单位：" + assets.getMaintainCompany());
+                                        inventoryTV.append("\n资产维保开始日期：" + assets.getMaintainStartDate());
+                                        inventoryTV.append("\n资产维保结束日期：" + assets.getMaintainEndDate());
+                                        inventoryTV.append("\n资产位置：" + assets.getPosition());
+                                        inventoryTV.append("\n资产状态：" + assets.getState());
+                                        assets.setStatus(Assets.STATUS_MATCH);
+                                        assetsDao.update(assets);
+                                    }else{
+                                        matchResultTV.setText("匹配失败");
+                                        inventoryTV.setText(realData);
+                                        assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(realData),
+                                                AssetsDao.Properties.Status.eq(Assets.STATUS_SCAN)).unique();
+                                        if(assets == null){
+                                            assets = new Assets();
+                                            assets.setBarCode(realData);
+                                            assets.setStatus(Assets.STATUS_SCAN);
+                                            assetsDao.insert(assets);
+                                        }
+                                    }
                                 }
                             });
                         }

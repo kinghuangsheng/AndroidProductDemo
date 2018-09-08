@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_left_right_padding"
+    android:paddingLeft="@dimen/activity_left_right_padding"
+    android:paddingRight="@dimen/activity_left_right_padding"
+    android:paddingTop="@dimen/activity_left_right_padding">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="200px"
+        android:textColor="@color/red"
+        android:textSize="@dimen/common_text_size"
+        android:id="@+id/tv_warning"
+        android:text="导入操作将清除之前的统计数据，是否确定导入？"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100px"
+        android:textColor="@color/common_text_color"
+        android:textSize="@dimen/common_text_size"
+        android:text="导入"
+        android:id="@+id/btn_sure"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50px"
+        android:textColor="@color/common_text_color"
+        android:textSize="@dimen/common_text_size"
+        android:text="取消"
+        android:id="@+id/btn_cancel"
+        />
+</LinearLayout>

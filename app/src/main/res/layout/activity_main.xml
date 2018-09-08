@@ -8,6 +8,37 @@
     android:paddingLeft="@dimen/activity_left_right_padding"
     android:paddingRight="@dimen/activity_left_right_padding"
     android:paddingTop="@dimen/activity_left_right_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_color"
+            android:textSize="@dimen/common_text_size"
+            android:id="@+id/btn_import_count"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_color"
+            android:textSize="@dimen/common_text_size"
+            android:id="@+id/btn_match_count"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_color"
+            android:textSize="@dimen/common_text_size"
+            android:id="@+id/btn_scan_count"
+            />
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

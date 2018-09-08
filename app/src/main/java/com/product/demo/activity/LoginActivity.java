@@ -96,7 +96,7 @@ public class LoginActivity extends BaseActivity {
         Single.fromCallable(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                if(new Poi2007ExcelUtil().checkUser(account, password)){
+                if(new PoiExcelUtil().checkUser(account, password)){
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(Constants.SHAREDPREFERENCES_KEY_ACCOUNT, account);
                     editor.putString(Constants.SHAREDPREFERENCES_KEY_PASSWORD, password);

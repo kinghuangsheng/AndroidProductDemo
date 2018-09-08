@@ -11,9 +11,11 @@ import android.widget.Button;
 import com.product.demo.R;
 import com.product.demo.config.Constants;
 import com.product.demo.exception.BusinessException;
+import com.product.demo.greendao.AssetsDao;
 import com.product.demo.greendao.BarCodeDao;
 import com.product.demo.greendao.DaoMaster;
 import com.product.demo.greendao.DaoSession;
+import com.product.demo.greendao.entity.Assets;
 import com.product.demo.greendao.entity.BarCode;
 import com.product.demo.util.ByteUtil;
 import com.product.demo.util.Poi2007ExcelUtil;
@@ -52,6 +54,42 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends BaseActivity {
 
 
+    @Inject
+    DaoSession daoSession;
+    @Inject
+    ToastUtil toastUtil;
+
+    AssetsDao assetsDao;
+
+    @BindView(R.id.btn_import_count)
+    Button importCountBtn;
+    @BindView(R.id.btn_match_count)
+    Button matchCountBtn;
+    @BindView(R.id.btn_scan_count)
+    Button scanCountBtn;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        assetsDao = daoSession.getAssetsDao();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        refreshCount();
+    }
+
+    private void refreshCount(){
+        long importCount = assetsDao.queryBuilder().where(AssetsDao.Properties.Status.eq(Assets.STATUS_IMPORT)).count();
+        long matchCount = assetsDao.queryBuilder().where(AssetsDao.Properties.Status.eq(Assets.STATUS_MATCH)).count();
+        importCountBtn.setText("已导入总数：" + (importCount + matchCount));
+        matchCountBtn.setText("已匹配数：" + matchCount);
+        long scanCount = assetsDao.queryBuilder().where(AssetsDao.Properties.Status.eq(Assets.STATUS_SCAN)).count();
+        scanCountBtn.setText("已扫描但未匹配数：" + scanCount);
+    }
 
     @OnClick(R.id.btn_write_tag)
     public void writeTag(){
@@ -63,11 +101,12 @@ public class MainActivity extends BaseActivity {
     }
     @OnClick(R.id.btn_data_import)
     public void dataImport(){
-        startActivity(new Intent(this, WriteTagActivity.class));
+        startActivity(new Intent(this, DataImportActivity.class));
     }
     @OnClick(R.id.btn_setting)
     public void setting(){
-        startActivity(new Intent(this, TestActivity.class));
+        toastUtil.showString("功能暂未实现");
+//        startActivity(new Intent(this, TestActivity.class));
     }
 
     @Override

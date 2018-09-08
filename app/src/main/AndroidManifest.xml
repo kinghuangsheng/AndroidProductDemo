@@ -17,6 +17,8 @@
         </activity>
         <activity android:name="com.product.demo.activity.AssetInventoryActivity">
         </activity>
+        <activity android:name="com.product.demo.activity.DataImportActivity">
+        </activity>
         <activity android:name="com.product.demo.activity.TestActivity">
         </activity>
         <activity android:name="com.product.demo.activity.MainActivity">

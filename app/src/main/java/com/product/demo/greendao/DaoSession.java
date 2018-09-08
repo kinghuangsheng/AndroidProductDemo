@@ -8,9 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.product.demo.greendao.entity.Assets;
 import com.product.demo.greendao.entity.BarCode;
 import com.product.demo.greendao.entity.User;
 
+import com.product.demo.greendao.AssetsDao;
 import com.product.demo.greendao.BarCodeDao;
 import com.product.demo.greendao.UserDao;
 
@@ -23,9 +25,11 @@ import com.product.demo.greendao.UserDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig assetsDaoConfig;
     private final DaoConfig barCodeDaoConfig;
     private final DaoConfig userDaoConfig;
 
+    private final AssetsDao assetsDao;
     private final BarCodeDao barCodeDao;
     private final UserDao userDao;
 
@@ -33,22 +37,32 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        assetsDaoConfig = daoConfigMap.get(AssetsDao.class).clone();
+        assetsDaoConfig.initIdentityScope(type);
+
         barCodeDaoConfig = daoConfigMap.get(BarCodeDao.class).clone();
         barCodeDaoConfig.initIdentityScope(type);
 
         userDaoConfig = daoConfigMap.get(UserDao.class).clone();
         userDaoConfig.initIdentityScope(type);
 
+        assetsDao = new AssetsDao(assetsDaoConfig, this);
         barCodeDao = new BarCodeDao(barCodeDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
 
+        registerDao(Assets.class, assetsDao);
         registerDao(BarCode.class, barCodeDao);
         registerDao(User.class, userDao);
     }
     
     public void clear() {
+        assetsDaoConfig.clearIdentityScope();
         barCodeDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
+    }
+
+    public AssetsDao getAssetsDao() {
+        return assetsDao;
     }
 
     public BarCodeDao getBarCodeDao() {
