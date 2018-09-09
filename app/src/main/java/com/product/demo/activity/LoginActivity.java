@@ -2,20 +2,17 @@ package com.product.demo.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import com.product.demo.R;
 import com.product.demo.config.Constants;
 import com.product.demo.exception.BusinessException;
 import com.product.demo.greendao.DaoSession;
 import com.product.demo.greendao.entity.User;
 import com.product.demo.retrofit.service.RequestService;
 import com.product.demo.util.JxlExcelUtil;
-import com.product.demo.util.Poi2007ExcelUtil;
-import com.product.demo.util.PoiExcelUtil;
+import com.product.zcpd.R;
 
 import java.util.concurrent.Callable;
 
@@ -26,16 +23,10 @@ import base.dagger2.component.ActivityComponent;
 import base.util.LogUtil;
 import base.util.ToastUtil;
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import rx.Observable;
-import rx.Observer;
-import rx.Scheduler;
 import rx.Single;
 import rx.SingleSubscriber;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.observables.AsyncOnSubscribe;
 import rx.schedulers.Schedulers;
 
 public class LoginActivity extends BaseActivity {

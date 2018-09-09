@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.greendao.AssetsDao;
 import com.product.demo.greendao.DaoSession;
 import com.product.demo.greendao.entity.Assets;

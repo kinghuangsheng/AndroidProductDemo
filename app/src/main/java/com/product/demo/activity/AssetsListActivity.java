@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.adapter.AssetsListAdapter;
 import com.product.demo.greendao.AssetsDao;
 import com.product.demo.greendao.DaoSession;
@@ -34,6 +34,7 @@ public class AssetsListActivity extends BaseActivity {
     public static final String INTENT_KEY_STATUS = "INTENT_KEY_STATUS";
     public static final String INTENT_KEY_STATUS_IMPORT = "INTENT_KEY_STATUS_IMPORT";
     public static final String INTENT_KEY_STATUS_MATCH = "INTENT_KEY_STATUS_MATCH";
+    public static final String INTENT_KEY_STATUS_UNMATCH = "INTENT_KEY_STATUS_UNMATCH";
     public static final String INTENT_KEY_STATUS_SCAN = "INTENT_KEY_STATUS_SCAN";
 
     @Inject
@@ -67,14 +68,17 @@ public class AssetsListActivity extends BaseActivity {
         } else if (INTENT_KEY_STATUS_MATCH.equals(status)) {
             exportFileName = "盘点成功资产列表.xls";
             queryBuilder = assetsDao.queryBuilder().where(AssetsDao.Properties.Status.eq(Assets.STATUS_MATCH));
+        } else if (INTENT_KEY_STATUS_UNMATCH.equals(status)) {
+            exportFileName = "未盘点资产列表.xls";
+            queryBuilder = assetsDao.queryBuilder().where(AssetsDao.Properties.Status.eq(Assets.STATUS_IMPORT));
         } else {
             exportFileName = "导入的资产列表.xls";
             queryBuilder = assetsDao.queryBuilder().whereOr(AssetsDao.Properties.Status.eq(Assets.STATUS_IMPORT),
-                    AssetsDao.Properties.Status.eq(Assets.STATUS_MATCH));
+                    AssetsDao.Properties.Status.eq(Assets.STATUS_MATCH)).orderAsc(AssetsDao.Properties.Status);
         }
         assetsList = queryBuilder.list();
         listView.setAdapter(new AssetsListAdapter(this, assetsList));
-        if (INTENT_KEY_STATUS_IMPORT.equals(status) || INTENT_KEY_STATUS_MATCH.equals(status)) {
+        if (INTENT_KEY_STATUS_IMPORT.equals(status) || INTENT_KEY_STATUS_MATCH.equals(status) || INTENT_KEY_STATUS_UNMATCH.equals(status)) {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

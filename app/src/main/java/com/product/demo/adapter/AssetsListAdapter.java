@@ -1,11 +1,12 @@
 package com.product.demo.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.greendao.entity.Assets;
 
 import java.util.List;
@@ -41,9 +42,16 @@ public class AssetsListAdapter extends AssetsListBaseAdapter<Assets> {
         }
         Assets assets = getItem(position);
 
-        viewHolder.nameTV.setText(assets.getName());
-        viewHolder.barCodeTV.setText(assets.getBarCode());
-        viewHolder.positionIV.setText(assets.getPosition());
+        if(TextUtils.isEmpty(assets.getBarCode())){
+            viewHolder.barCodeTV.setText("该标签没有写入资产条码，EPC为：");
+            viewHolder.nameTV.setText(assets.getEpc());
+            viewHolder.positionIV.setText("");
+        }else{
+            viewHolder.barCodeTV.setText(assets.getBarCode());
+            viewHolder.nameTV.setText(assets.getName());
+            viewHolder.positionIV.setText(assets.getPosition());
+        }
+
         if(assets.inventorySuccess()){
             viewHolder.statusIV.setText("√");
         }else{

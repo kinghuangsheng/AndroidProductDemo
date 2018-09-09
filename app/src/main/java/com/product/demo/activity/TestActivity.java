@@ -7,12 +7,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.greendao.BarCodeDao;
 import com.product.demo.greendao.DaoSession;
 import com.product.demo.greendao.entity.BarCode;
 import com.product.demo.util.ByteUtil;
-import com.product.demo.util.Poi2007ExcelUtil;
 import com.scandecode.ScanDecode;
 import com.scandecode.inf.ScanInterface;
 import com.speedata.libuhf.IUHFService;
@@ -109,7 +108,8 @@ public class TestActivity extends BaseActivity {
         Single.fromCallable(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                List<BarCode> barCodeList = new Poi2007ExcelUtil().importData();
+//                List<BarCode> barCodeList =  new Poi2007ExcelUtil().importData();
+                List<BarCode> barCodeList =  null;
                 barCodeDao.deleteAll();
                 barCodeDao.insertInTx(barCodeList);
                 return barCodeList;

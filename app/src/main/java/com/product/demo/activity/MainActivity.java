@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.greendao.AssetsDao;
 import com.product.demo.greendao.DaoSession;
 import com.product.demo.greendao.entity.Assets;
@@ -31,6 +31,8 @@ public class MainActivity extends BaseActivity {
     Button importCountBtn;
     @BindView(R.id.btn_match_count)
     Button matchCountBtn;
+    @BindView(R.id.btn_unmatch_count)
+    Button unmatchCountBtn;
     @BindView(R.id.btn_scan_count)
     Button scanCountBtn;
 
@@ -57,6 +59,7 @@ public class MainActivity extends BaseActivity {
         matchCount = assetsDao.queryBuilder().where(AssetsDao.Properties.Status.eq(Assets.STATUS_MATCH)).count();
         importCountBtn.setText("已导入总数：" + (importCount + matchCount));
         matchCountBtn.setText("已匹配数：" + matchCount);
+        unmatchCountBtn.setText("未已匹配数：" + importCount);
         scanCount = assetsDao.queryBuilder().where(AssetsDao.Properties.Status.eq(Assets.STATUS_SCAN)).count();
         scanCountBtn.setText("已扫描但未匹配数：" + scanCount);
     }
@@ -79,6 +82,16 @@ public class MainActivity extends BaseActivity {
         }
         Intent intent = new Intent(this, AssetsListActivity.class);
         intent.putExtra(AssetsListActivity.INTENT_KEY_STATUS, AssetsListActivity.INTENT_KEY_STATUS_MATCH);
+        startActivity(intent);
+    }
+    @OnClick(R.id.btn_unmatch_count)
+    public void unmatchList(){
+        if(importCount == 0){
+            toastUtil.showString("暂无数据");
+            return;
+        }
+        Intent intent = new Intent(this, AssetsListActivity.class);
+        intent.putExtra(AssetsListActivity.INTENT_KEY_STATUS, AssetsListActivity.INTENT_KEY_STATUS_UNMATCH);
         startActivity(intent);
     }
     @OnClick(R.id.btn_scan_count)

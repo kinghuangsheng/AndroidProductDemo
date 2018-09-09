@@ -1,16 +1,13 @@
 package com.product.demo.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.greendao.AssetsDao;
 import com.product.demo.greendao.DaoSession;
 import com.product.demo.greendao.entity.Assets;
-import com.product.demo.greendao.entity.BarCode;
 import com.product.demo.util.JxlExcelUtil;
-import com.product.demo.util.Poi2007ExcelUtil;
 
 import java.util.List;
 import java.util.concurrent.Callable;

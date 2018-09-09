@@ -35,6 +35,13 @@
             android:layout_height="wrap_content"
             android:textColor="@color/common_text_color"
             android:textSize="@dimen/common_text_size"
+            android:id="@+id/btn_unmatch_count"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_color"
+            android:textSize="@dimen/common_text_size"
             android:id="@+id/btn_scan_count"
             />
 

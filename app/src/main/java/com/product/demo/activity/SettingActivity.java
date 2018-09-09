@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.config.Constants;
 import com.product.demo.dialog.SetModuleDialog;
 import com.product.demo.exception.BusinessException;

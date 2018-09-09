@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.adapter.AssetsListAdapter;
 import com.product.demo.greendao.AssetsDao;
 import com.product.demo.greendao.DaoSession;
@@ -57,6 +57,7 @@ public class AssetInventoryActivity extends BaseActivity {
     private boolean running = false;
     LinkedBlockingQueue<String> epcsScanedToHandle = new LinkedBlockingQueue<String>();
     private boolean devOpened = false;
+    String curEpc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,16 +81,34 @@ public class AssetInventoryActivity extends BaseActivity {
                 //int EPCLen EPC长度
                 //int DataLen 读到的数据长度
                 //int RSS 信号强度
+                LogUtil.info(this, "thread = " + Thread.currentThread());
                 if(spdReadData.getStatus() == 0){
                     String readHexString = StringUtils.byteToHexString(spdReadData.getReadData(), spdReadData.getDataLen());
                     String realData = null;
                     if("000000000000000000000000000000000000000000000000".equals(readHexString)){
-                        realData = StringUtils.byteToHexString(spdReadData.getEPCData(), spdReadData.getEPCLen());
+                        realData = null;
                     }else{
                         realData = new String(ByteUtil.hexString2Bytes(readHexString));
                         LogUtil.info(this, "getReadData = " + realData);
                     }
-                    onFindBarCode(realData);
+                    onFindBarCode(curEpc, realData);
+                }
+            }
+        });
+        iuhfService.setOnInventoryListener(new OnSpdInventoryListener() {
+            @Override
+            public void getInventoryData(SpdInventoryData spdInventoryData) {
+                //SpdInventoryData
+                //String epc 卡片EPC（16进制）
+                //String rssi 信号强度
+                //String tid 存放TID或USER数据（仅R2000模块支持）
+                LogUtil.info(this, spdInventoryData.epc + "");
+                LogUtil.info(this, spdInventoryData.rssi + "");
+                LogUtil.info(this, spdInventoryData.tid + "");
+                try {
+                    epcsScanedToHandle.put(spdInventoryData.epc);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -104,38 +123,25 @@ public class AssetInventoryActivity extends BaseActivity {
                     return;
                 }
                 devOpened = true;
-                iuhfService.setOnInventoryListener(new OnSpdInventoryListener() {
-                    @Override
-                    public void getInventoryData(SpdInventoryData spdInventoryData) {
-                        //SpdInventoryData
-                        //String epc 卡片EPC（16进制）
-                        //String rssi 信号强度
-                        //String tid 存放TID或USER数据（仅R2000模块支持）
-                        LogUtil.info(this, spdInventoryData.epc + "");
-                        LogUtil.info(this, spdInventoryData.rssi + "");
-                        LogUtil.info(this, spdInventoryData.tid + "");
-                        try {
-                            epcsScanedToHandle.put(spdInventoryData.epc);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         warningTV.setText("正在盘点，已盘点到的资产：");
                     }
                 });
-                //开始盘点
-                iuhfService.inventoryStart();
                 running = true;
                 while (running){
                     try {
-                        String epc = epcsScanedToHandle.take();
-                        if(!epcList.contains(epc)){
-                            epcList.add(epc);
-                            read(epc);
+                        if(epcsScanedToHandle.isEmpty()){
+                            iuhfService.inventoryStart();
+                            LogUtil.info(this, "开始盘点");
+                        }
+                        curEpc = epcsScanedToHandle.take();
+                        LogUtil.info(this, "拿到epc，是否已处理过 = " + epcList.contains(curEpc));
+                        if(!epcList.contains(curEpc)){
+                            epcList.add(curEpc);
+                            read(curEpc);
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -154,28 +160,43 @@ public class AssetInventoryActivity extends BaseActivity {
         }
     }
 
-    private void onFindBarCode(final String barCode) {
+    private void onFindBarCode(final String epc, final String barCode) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AssetsDao assetsDao = daoSession.getAssetsDao();
-                Assets assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
-                        AssetsDao.Properties.Status.notEq(Assets.STATUS_SCAN)).unique();
-                if(assets != null){
-                    assets.setStatus(Assets.STATUS_MATCH);
-                    assetsDao.update(assets);
-                }else{
-                    assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
-                            AssetsDao.Properties.Status.eq(Assets.STATUS_SCAN)).unique();
+                if(barCode == null){
+                    Assets assets = assetsDao.queryBuilder().where(AssetsDao.Properties.Epc.eq(epc)).unique();
                     if(assets == null){
                         assets = new Assets();
+                        assets.setEpc(epc);
                         assets.setBarCode(barCode);
                         assets.setStatus(Assets.STATUS_SCAN);
                         assetsDao.insert(assets);
                     }
+                    assetsList.add(assets);
+                    assetsListAdapter.notifyDataSetChanged();
+                }else{
+                    Assets assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
+                            AssetsDao.Properties.Status.notEq(Assets.STATUS_SCAN)).unique();
+                    if(assets != null){
+                        assets.setStatus(Assets.STATUS_MATCH);
+                        assetsDao.update(assets);
+                    }else{
+                        assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
+                                AssetsDao.Properties.Status.eq(Assets.STATUS_SCAN)).unique();
+                        if(assets == null){
+                            assets = new Assets();
+                            assets.setEpc(epc);
+                            assets.setBarCode(barCode);
+                            assets.setStatus(Assets.STATUS_SCAN);
+                            assetsDao.insert(assets);
+                        }
+                    }
+                    assetsList.add(assets);
+                    assetsListAdapter.notifyDataSetChanged();
                 }
-                assetsList.add(assets);
-                assetsListAdapter.notifyDataSetChanged();
+
             }
         });
     }
@@ -223,5 +244,8 @@ public class AssetInventoryActivity extends BaseActivity {
         if (readArea != 0) {
             toastUtil.showString("读取数据失败！");
         }
+        iuhfService.selectCard(1, "", false); //取消选卡
+        LogUtil.info(this, "read thread = " + Thread.currentThread());
+
     }
 }

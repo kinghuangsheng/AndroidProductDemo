@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.speedata.libuhf.IUHFService;
 
 import java.text.DecimalFormat;

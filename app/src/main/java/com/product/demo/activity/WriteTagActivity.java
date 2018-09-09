@@ -2,9 +2,10 @@ package com.product.demo.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 import com.product.demo.util.ByteUtil;
 import com.scandecode.ScanDecode;
 import com.scandecode.inf.ScanInterface;
@@ -39,6 +40,10 @@ public class WriteTagActivity extends BaseActivity {
 
     @BindView(R.id.tv_scanned_data)
     TextView scannedDataTV;
+    @BindView(R.id.btn_write_tag)
+    TextView writeTabBtn;
+    @BindView(R.id.btn_scan_tag)
+    TextView scanTagBtn;
 
     @BindView(R.id.tv_tag)
     TextView tagTV;
@@ -48,9 +53,83 @@ public class WriteTagActivity extends BaseActivity {
 
     SpdInventoryData curSpdInventoryData;
 
+    private boolean rfidDevOpen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initScan();
+
+        initiUHFService();
+
+        writeTabBtn.setEnabled(false);
+        writeTabBtn.setText("正在启动RFID设备...");
+
+
+    }
+
+    private void initiUHFService() {
+        iuhfService = UHFManager.getUHFService(WriteTagActivity.this);
+        iuhfService.setOnInventoryListener(new OnSpdInventoryListener() {
+            @Override
+            public void getInventoryData(SpdInventoryData spdInventoryData) {
+                //SpdInventoryData
+                //String epc 卡片EPC（16进制）
+                //String rssi 信号强度
+                //String tid 存放TID或USER数据（仅R2000模块支持）
+                iuhfService.inventoryStop();
+                LogUtil.info(this, spdInventoryData.epc + "");
+                LogUtil.info(this, spdInventoryData.rssi + "");
+                LogUtil.info(this, spdInventoryData.tid + "");
+                if(curSpdInventoryData == null
+                        || !curSpdInventoryData.rssi.equals(spdInventoryData.rssi)){
+                    curSpdInventoryData = spdInventoryData;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tagTV.setText(curSpdInventoryData.epc);
+                        }
+                    });
+                }
+            }
+        });
+        iuhfService.setOnWriteListener(new OnSpdWriteListener() {
+            @Override
+            public void getWriteData(SpdWriteData spdWriteData) {
+                //SpdWriteData
+                //int status 写入状态，成功与否
+                //byte[] EPCData 目标卡片EPC
+                //int EPCLen EPC长度
+                //int RSS 信号强度
+                LogUtil.info(this, "待写入回调 status = " + spdWriteData.getStatus() + "  epcData = "
+                        + StringUtils.byteToHexString(spdWriteData.getEPCData(), spdWriteData.getEPCLen()));
+
+            }
+        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int result = iuhfService.openDev();
+                if(result != 0){
+                    toastUtil.showString("RFID设备起用失败！");
+                    finish();
+                }
+                rfidDevOpen = true;
+                iuhfService.inventoryStart();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        writeTabBtn.setEnabled(true);
+                        writeTabBtn.setText("写入");
+                        scanTagBtn.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void initScan() {
         scanDecode = new ScanDecode(this);
         scanDecode.initService("false");//初始化扫描服务
         scanDecode.getBarCode(new ScanInterface.OnScanListener() {
@@ -69,15 +148,6 @@ public class WriteTagActivity extends BaseActivity {
 
             }
         });
-
-        iuhfService = UHFManager.getUHFService(WriteTagActivity.this);
-        int result = iuhfService.openDev();
-        if(result != 0){
-            toastUtil.showString("RFID设备起用失败！");
-            finish();
-        }
-        inventoryStart();
-
     }
 
 
@@ -90,7 +160,8 @@ public class WriteTagActivity extends BaseActivity {
     public void scanTag(){
         curSpdInventoryData = null;
         tagTV.setText(null);
-        inventoryStart();
+        iuhfService.inventoryStart();
+
     }
 
     @OnClick(R.id.btn_write_tag)
@@ -108,6 +179,7 @@ public class WriteTagActivity extends BaseActivity {
             toastUtil.showString("没有连接到标签，不能写入");
             return;
         }
+        writeTabBtn.setEnabled(false);
         Single.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
@@ -115,22 +187,14 @@ public class WriteTagActivity extends BaseActivity {
                 if(result != 0){
                     return "与标签失去连接";
                 }
-                iuhfService.setOnWriteListener(new OnSpdWriteListener() {
-                    @Override
-                    public void getWriteData(SpdWriteData spdWriteData) {
-                        //SpdWriteData
-                        //int status 写入状态，成功与否
-                        //byte[] EPCData 目标卡片EPC
-                        //int EPCLen EPC长度
-                        //int RSS 信号强度
-                        if (spdWriteData.getStatus() == 0){
-                            LogUtil.info(this, "" + spdWriteData.getEPCData());
-                        }
-                    }
-                });
                 String hexString = ByteUtil.bytes2HexString(scannedDataTV.getText().toString().getBytes("utf8"));
+                LogUtil.info(this, "待写入16进制字符串 = " + hexString);
                 int writeResult = iuhfService.writeArea(3,0, hexString.length() / 4,"00000000", StringUtils.stringToByte(hexString));
                 LogUtil.info(this, "writeArea = " + writeResult);
+                result = iuhfService.selectCard(1, "", false); //选卡
+                if(result != 0){
+                    return "与标签失去连接";
+                }
                 if (writeResult == 0) {
                     return "数据写入成功！";
                 }else{
@@ -142,12 +206,14 @@ public class WriteTagActivity extends BaseActivity {
             @Override
             public void onSuccess(String value) {
                 toastUtil.showString(value);
+                writeTabBtn.setEnabled(true);
             }
 
             @Override
             public void onError(Throwable error) {
                 error.printStackTrace();
                 toastUtil.showString(error.getMessage());
+                writeTabBtn.setEnabled(true);
 
             }
         });
@@ -155,11 +221,25 @@ public class WriteTagActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(rfidDevOpen){
+            super.onBackPressed();
+        }else{
+            toastUtil.showString("正在启用RFID设备，请稍后再操作");
+        }
+    }
+
+    @Override
     public void onActivityFinishOrDestroy() {
         super.onActivityFinishOrDestroy();
         iuhfService.inventoryStop();
         iuhfService.closeDev();
-        scanDecode.onDestroy();
+        try{
+            scanDecode.onDestroy();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -170,54 +250,6 @@ public class WriteTagActivity extends BaseActivity {
     @Override
     public void dagger2Inject(ActivityComponent component) {
         component.inject(this);
-    }
-
-    private void inventoryStart(){
-        Single.fromCallable(new Callable<String>() {
-            @Override
-            public String call() {
-                iuhfService.setOnInventoryListener(new OnSpdInventoryListener() {
-                    @Override
-                    public void getInventoryData(SpdInventoryData spdInventoryData) {
-                        //SpdInventoryData
-                        //String epc 卡片EPC（16进制）
-                        //String rssi 信号强度
-                        //String tid 存放TID或USER数据（仅R2000模块支持）
-                        LogUtil.info(this, spdInventoryData.epc + "");
-                        LogUtil.info(this, spdInventoryData.rssi + "");
-                        LogUtil.info(this, spdInventoryData.tid + "");
-                        if(curSpdInventoryData == null
-                                || !curSpdInventoryData.rssi.equals(spdInventoryData.rssi)){
-                            curSpdInventoryData = spdInventoryData;
-                            tagTV.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    tagTV.setText(curSpdInventoryData.epc);
-                                }
-                            });
-                            iuhfService.inventoryStop();
-                        }
-                    }
-                });
-                //开始盘点
-                iuhfService.inventoryStart();
-                return "";
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleSubscriber<String>()
-        {
-            @Override
-            public void onSuccess(String value) {
-                if(!TextUtils.isEmpty(value)){
-                    toastUtil.showString(value);
-                }
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                error.printStackTrace();
-                toastUtil.showString("RFID功能启用失败！");
-            }
-        });
     }
 
 }

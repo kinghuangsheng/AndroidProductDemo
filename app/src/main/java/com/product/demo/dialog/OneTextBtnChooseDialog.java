@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.product.demo.R;
+import com.product.zcpd.R;
 
 import base.android.BaseDialog;
 import base.dagger2.component.DialogComponent;

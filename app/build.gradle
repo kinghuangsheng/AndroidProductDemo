@@ -28,11 +28,11 @@ android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.product.demo"
+        applicationId "com.product.zcpd"
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 10000
+        versionName "1.0.0"
 
         //在BuildConfig里面创建BUILD_TIME变量，代表apk编译时间
         buildConfigField "String", "BUILD_TIME", "\"${buildTime()}\""

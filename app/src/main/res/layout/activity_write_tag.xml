@@ -42,6 +42,7 @@
             android:textSize="@dimen/common_text_size"
             android:text="刷新"
             android:gravity="right"
+            android:visibility="invisible"
             android:id="@+id/btn_scan_tag"
             />
     </LinearLayout>
@@ -62,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/common_text_color"
                 android:textSize="@dimen/common_text_size"
-                android:text="当前数据："
+                android:text="待写入数据："
                 />
             <TextView
                 android:layout_width="wrap_content"
