@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.btn_setting)
     public void setting(){
 //        toastUtil.showString("功能暂未实现");
-        startActivity(new Intent(this, TestActivity.class));
+        startActivity(new Intent(this, SettingActivity.class));
     }
 
     @Override

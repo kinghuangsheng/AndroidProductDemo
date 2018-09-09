@@ -59,15 +59,16 @@ public class Assets implements Serializable{
     private String state;
 
     private int status;
+    private String epc;
 
 
-    @Generated(hash = 1601811016)
+    @Generated(hash = 2109656039)
     public Assets(Long id, String name, String code, String barCode,
             String serialNumber, String specifications, String unit,
             String supplier, String produceCompany, String maintainCompany,
             String maintainStartDate, String maintainEndDate, String useDate,
             String department, String position, String userId, String userName,
-            String mainAssetsCode, String state, int status) {
+            String mainAssetsCode, String state, int status, String epc) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -88,6 +89,7 @@ public class Assets implements Serializable{
         this.mainAssetsCode = mainAssetsCode;
         this.state = state;
         this.status = status;
+        this.epc = epc;
     }
 
     @Generated(hash = 1373698660)
@@ -257,5 +259,13 @@ public class Assets implements Serializable{
 
     public boolean inventorySuccess() {
         return status == STATUS_MATCH;
+    }
+
+    public String getEpc() {
+        return epc;
+    }
+
+    public void setEpc(String epc) {
+        this.epc = epc;
     }
 }

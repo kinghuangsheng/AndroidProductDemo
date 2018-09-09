@@ -2,6 +2,8 @@ package com.product.demo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,6 +28,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.inject.Inject;
 
@@ -52,8 +55,8 @@ public class AssetInventoryActivity extends BaseActivity {
     List<String> epcList = new ArrayList<String>();
     AssetsListAdapter assetsListAdapter;
     private boolean running = false;
-    List<String> epcsScanedToHandle = new LinkedList<String>();
-    private Object waitLock = new Object();
+    LinkedBlockingQueue<String> epcsScanedToHandle = new LinkedBlockingQueue<String>();
+    private boolean devOpened = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +103,7 @@ public class AssetInventoryActivity extends BaseActivity {
                     finish();
                     return;
                 }
+                devOpened = true;
                 iuhfService.setOnInventoryListener(new OnSpdInventoryListener() {
                     @Override
                     public void getInventoryData(SpdInventoryData spdInventoryData) {
@@ -110,7 +114,11 @@ public class AssetInventoryActivity extends BaseActivity {
                         LogUtil.info(this, spdInventoryData.epc + "");
                         LogUtil.info(this, spdInventoryData.rssi + "");
                         LogUtil.info(this, spdInventoryData.tid + "");
-                        addEPCToHandle(spdInventoryData.epc);
+                        try {
+                            epcsScanedToHandle.put(spdInventoryData.epc);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 runOnUiThread(new Runnable() {
@@ -121,15 +129,10 @@ public class AssetInventoryActivity extends BaseActivity {
                 });
                 //开始盘点
                 iuhfService.inventoryStart();
-                running = false;
+                running = true;
                 while (running){
                     try {
-                        if(epcsScanedToHandle.size() == 0){
-                            synchronized (waitLock){
-                                waitLock.wait();
-                            }
-                        }
-                        String epc = getEPCToHandle();
+                        String epc = epcsScanedToHandle.take();
                         if(!epcList.contains(epc)){
                             epcList.add(epc);
                             read(epc);
@@ -142,15 +145,13 @@ public class AssetInventoryActivity extends BaseActivity {
         }).start();
     }
 
-    public synchronized void addEPCToHandle(String epc){
-        epcsScanedToHandle.add(epc);
-        synchronized (waitLock){
-            waitLock.notify();
+    @Override
+    public void onBackPressed() {
+        if(devOpened){
+            super.onBackPressed();
+        }else{
+            toastUtil.showString("正在启用RFID设备，请稍后再操作");
         }
-    }
-
-    public synchronized String getEPCToHandle(){
-        return epcsScanedToHandle.remove(0);
     }
 
     private void onFindBarCode(final String barCode) {

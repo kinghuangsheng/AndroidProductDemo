@@ -44,6 +44,7 @@ public class AssetsDao extends AbstractDao<Assets, Long> {
         public final static Property MainAssetsCode = new Property(17, String.class, "mainAssetsCode", false, "MAIN_ASSETS_CODE");
         public final static Property State = new Property(18, String.class, "state", false, "STATE");
         public final static Property Status = new Property(19, int.class, "status", false, "STATUS");
+        public final static Property Epc = new Property(20, String.class, "epc", false, "EPC");
     }
 
 
@@ -78,7 +79,8 @@ public class AssetsDao extends AbstractDao<Assets, Long> {
                 "\"USER_NAME\" TEXT," + // 16: userName
                 "\"MAIN_ASSETS_CODE\" TEXT," + // 17: mainAssetsCode
                 "\"STATE\" TEXT," + // 18: state
-                "\"STATUS\" INTEGER NOT NULL );"); // 19: status
+                "\"STATUS\" INTEGER NOT NULL ," + // 19: status
+                "\"EPC\" TEXT);"); // 20: epc
     }
 
     /** Drops the underlying database table. */
@@ -186,6 +188,11 @@ public class AssetsDao extends AbstractDao<Assets, Long> {
             stmt.bindString(19, state);
         }
         stmt.bindLong(20, entity.getStatus());
+ 
+        String epc = entity.getEpc();
+        if (epc != null) {
+            stmt.bindString(21, epc);
+        }
     }
 
     @Override
@@ -287,6 +294,11 @@ public class AssetsDao extends AbstractDao<Assets, Long> {
             stmt.bindString(19, state);
         }
         stmt.bindLong(20, entity.getStatus());
+ 
+        String epc = entity.getEpc();
+        if (epc != null) {
+            stmt.bindString(21, epc);
+        }
     }
 
     @Override
@@ -316,7 +328,8 @@ public class AssetsDao extends AbstractDao<Assets, Long> {
             cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // userName
             cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // mainAssetsCode
             cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // state
-            cursor.getInt(offset + 19) // status
+            cursor.getInt(offset + 19), // status
+            cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20) // epc
         );
         return entity;
     }
@@ -343,6 +356,7 @@ public class AssetsDao extends AbstractDao<Assets, Long> {
         entity.setMainAssetsCode(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
         entity.setState(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
         entity.setStatus(cursor.getInt(offset + 19));
+        entity.setEpc(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
      }
     
     @Override

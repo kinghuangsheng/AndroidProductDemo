@@ -9,6 +9,14 @@
     android:paddingRight="@dimen/activity_left_right_padding"
     android:paddingTop="@dimen/activity_left_right_padding">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/common_text_color"
+        android:textSize="@dimen/common_text_size"
+        android:text="导出文件"
+        android:id="@+id/btn_export"
+        />
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

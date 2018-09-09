@@ -29,6 +29,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.inject.Inject;
 
@@ -135,6 +136,7 @@ public class TestActivity extends BaseActivity {
         });
     }
 
+    LinkedBlockingQueue<String> epcsScanedToHandle = new LinkedBlockingQueue<String>();
 
     private  boolean inventorying = false;
     @OnClick(R.id.btn_inventory)
@@ -157,6 +159,11 @@ public class TestActivity extends BaseActivity {
                     LogUtil.info(this, spdInventoryData.epc + "");
                     LogUtil.info(this, spdInventoryData.rssi + "");
                     LogUtil.info(this, spdInventoryData.tid + "");
+                    try {
+                        epcsScanedToHandle.put(spdInventoryData.epc);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             //开始盘点

@@ -6,6 +6,7 @@ import com.product.demo.activity.DataImportActivity;
 import com.product.demo.activity.AssetsListActivity;
 import com.product.demo.activity.LoginActivity;
 import com.product.demo.activity.MainActivity;
+import com.product.demo.activity.SettingActivity;
 import com.product.demo.activity.TestActivity;
 import com.product.demo.activity.WriteTagActivity;
 
@@ -25,5 +26,6 @@ public interface ActivityComponent {
     void inject(DataImportActivity act);
     void inject(AssetsListActivity act);
     void inject(AssetsDetailActivity act);
+    void inject(SettingActivity act);
     void inject(TestActivity act);
 }
