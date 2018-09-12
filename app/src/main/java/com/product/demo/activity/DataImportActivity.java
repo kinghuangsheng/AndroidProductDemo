@@ -1,5 +1,7 @@
 package com.product.demo.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -47,6 +49,36 @@ public class DataImportActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         assetsDao = daoSession.getAssetsDao();
     }
+    @OnClick(R.id.btn_clear)
+    public void clear(){
+//    通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //    设置Title的内容
+        builder.setTitle("警告框");
+        //    设置Content来显示一个信息
+        builder.setMessage("清除数据之后，将无法恢复，是否确定清除？");
+        //    设置一个PositiveButton
+        builder.setPositiveButton("确定清除", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                assetsDao.deleteAll();
+                warningTV.setText("数据已清除");
+            }
+        });
+        //    设置一个NegativeButton
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+
+            }
+        });
+        builder.show();
+        //
+    }
 
     @OnClick(R.id.btn_sure)
     public void sure(){
@@ -56,7 +88,6 @@ public class DataImportActivity extends BaseActivity {
             @Override
             public List<Assets> call() throws Exception {
                 List<Assets> assetsList = new JxlExcelUtil().importData();
-                assetsDao.deleteAll();
                 assetsDao.insertInTx(assetsList);
                 return assetsList;
             }

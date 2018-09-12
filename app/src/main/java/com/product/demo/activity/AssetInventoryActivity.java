@@ -177,13 +177,16 @@ public class AssetInventoryActivity extends BaseActivity {
                     assetsList.add(assets);
                     assetsListAdapter.notifyDataSetChanged();
                 }else{
-                    Assets assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
-                            AssetsDao.Properties.Status.notEq(Assets.STATUS_SCAN)).unique();
-                    if(assets != null){
-                        assets.setStatus(Assets.STATUS_MATCH);
-                        assetsDao.update(assets);
+                    List<Assets> matchedAssetsList = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
+                            AssetsDao.Properties.Status.notEq(Assets.STATUS_SCAN)).list();
+                    if(matchedAssetsList != null && !matchedAssetsList.isEmpty()){
+                        for(Assets assets : matchedAssetsList){
+                            assets.setStatus(Assets.STATUS_MATCH);
+                            assetsDao.update(assets);
+                        }
+                        assetsList.addAll(matchedAssetsList);
                     }else{
-                        assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
+                        Assets assets = assetsDao.queryBuilder().where(AssetsDao.Properties.BarCode.eq(barCode),
                                 AssetsDao.Properties.Status.eq(Assets.STATUS_SCAN)).unique();
                         if(assets == null){
                             assets = new Assets();
@@ -192,8 +195,9 @@ public class AssetInventoryActivity extends BaseActivity {
                             assets.setStatus(Assets.STATUS_SCAN);
                             assetsDao.insert(assets);
                         }
+                        assetsList.add(assets);
                     }
-                    assetsList.add(assets);
+
                     assetsListAdapter.notifyDataSetChanged();
                 }
 

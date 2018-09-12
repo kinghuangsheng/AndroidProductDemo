@@ -7,10 +7,34 @@
     android:paddingBottom="@dimen/activity_left_right_padding"
     android:paddingLeft="@dimen/activity_left_right_padding"
     android:paddingRight="@dimen/activity_left_right_padding"
-    android:paddingTop="@dimen/activity_left_right_padding">
+    android:paddingTop="@dimen/activity_left_right_padding"
+    android:gravity="bottom">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:textSize="@dimen/common_text_size"
+        android:text="该页面支持多次写入相同或不同标签，根据需要刷新标签和重新扫描数据即可。"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/common_text_color"
+        android:textSize="@dimen/common_text_size"
+        android:layout_marginTop="20px"
+        android:text="扫描到的标签列表："
+        />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="430px"
+        android:id="@+id/lv"
+        >
+
+    </ListView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20px"
         android:orientation="horizontal"
         >
         <LinearLayout
@@ -23,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/common_text_color"
                 android:textSize="@dimen/common_text_size"
-                android:text="当前标签："
+                android:text="待写入标签："
                 />
             <TextView
                 android:layout_width="match_parent"
@@ -51,7 +75,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50px"
+        android:layout_marginTop="20px"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal">
         <LinearLayout
@@ -88,7 +112,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50px"
+        android:layout_marginTop="20px"
         android:textColor="@color/common_text_color"
         android:textSize="@dimen/common_text_size"
         android:text="写入"
