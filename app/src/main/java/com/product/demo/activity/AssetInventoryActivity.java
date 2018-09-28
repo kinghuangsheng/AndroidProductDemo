@@ -1,6 +1,7 @@
 package com.product.demo.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,6 +50,9 @@ public class AssetInventoryActivity extends BaseActivity {
     ToastUtil toastUtil;
     @Inject
     DaoSession daoSession;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     IUHFService iuhfService;
     List<Assets> assetsList = new ArrayList<Assets>();
@@ -102,7 +106,7 @@ public class AssetInventoryActivity extends BaseActivity {
                 //String epc 卡片EPC（16进制）
                 //String rssi 信号强度
                 //String tid 存放TID或USER数据（仅R2000模块支持）
-                LogUtil.info(this, spdInventoryData.epc + "");
+                LogUtil.info(this, "读到标签：" + spdInventoryData.epc + "");
                 LogUtil.info(this, spdInventoryData.rssi + "");
                 LogUtil.info(this, spdInventoryData.tid + "");
                 try {
@@ -122,15 +126,25 @@ public class AssetInventoryActivity extends BaseActivity {
                     finish();
                     return;
                 }
+
                 devOpened = true;
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         warningTV.setText("正在盘点，已盘点到的资产：");
+                        int result = iuhfService.setAntennaPower(sharedPreferences.getInt(SettingActivity.SP_KEY_POWER, SettingActivity.DEFAULT_POWER));
+                        if(result != 0){
+                            toastUtil.showString("功率设置失败！");
+                        }
                     }
                 });
                 running = true;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 while (running){
                     try {
                         if(epcsScanedToHandle.isEmpty()){

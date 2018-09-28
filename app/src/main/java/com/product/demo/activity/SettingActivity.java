@@ -36,6 +36,9 @@ import rx.schedulers.Schedulers;
 
 public class SettingActivity extends BaseActivity {
 
+    public static final String SP_KEY_POWER = "power";
+    public static final int DEFAULT_POWER = 26;
+
     @Inject
     ToastUtil toastUtil;
 
@@ -56,18 +59,11 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.btn_modify_antenna_power)
     Button modifyAntennaPowerBtn;
 
-    IUHFService iuhfService;
-
-    private boolean devOpened = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        iuhfService = UHFManager.getUHFService(this);
-
-        initIUHfService();
-
+        antennaPowerET.setText("" + sharedPreferences.getInt(SP_KEY_POWER, DEFAULT_POWER));
     }
 
     @OnClick(R.id.btn_modify_antenna_power)
@@ -78,53 +74,18 @@ public class SettingActivity extends BaseActivity {
         int antennaPower = Integer.parseInt(antennaPowerET.getText().toString());
         if(antennaPower < 0 || antennaPower > 30){
             toastUtil.showString("请输入正确的功率值");
+            return;
         }
-        int result = iuhfService.setAntennaPower(antennaPower);
-        if(result == 0){
-            toastUtil.showString("修改功率成功");
-        }else{
-            toastUtil.showString("修改功率失败");
-        }
-    }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(SP_KEY_POWER, antennaPower);
+        editor.commit();
+        toastUtil.showString("功率修改成功");
 
-    private void initIUHfService() {
-
-        modifyAntennaPowerBtn.setEnabled(false);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int result = iuhfService.openDev();
-                if(result != 0){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            toastUtil.showString("RFID设备起用失败！");
-                            modifyAntennaPowerBtn.setVisibility(View.INVISIBLE);
-                            antennaPowerET.setVisibility(View.INVISIBLE);
-                        }
-                    });
-                    return;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        modifyAntennaPowerBtn.setEnabled(true);
-                        devOpened = true;
-                        int antennaPower = iuhfService.getAntennaPower();
-                        antennaPowerET.setText("" + antennaPower);
-                    }
-                });
-
-            }
-        }).start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(devOpened){
-            iuhfService.closeDev();
-        }
     }
 
     @OnClick(R.id.btn_modify_password)

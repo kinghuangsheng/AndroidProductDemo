@@ -1,5 +1,6 @@
 package com.product.demo.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -57,6 +58,9 @@ public class WriteTagActivity extends BaseActivity {
 
     @Inject
     ToastUtil toastUtil;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     SpdInventoryData curSpdInventoryData;
 
@@ -156,14 +160,19 @@ public class WriteTagActivity extends BaseActivity {
                     toastUtil.showString("RFID设备起用失败！");
                     finish();
                 }
-                iuhfService.inventoryStart();
-                rfidDevOpen = true;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         writeTabBtn.setEnabled(true);
                         writeTabBtn.setText("写入");
                         scanTagBtn.setVisibility(View.VISIBLE);
+                        int result = iuhfService.setAntennaPower(sharedPreferences.getInt(SettingActivity.SP_KEY_POWER, SettingActivity.DEFAULT_POWER));
+                        if(result != 0){
+                            toastUtil.showString("功率设置失败！");
+                        }
+                        iuhfService.inventoryStart();
+                        rfidDevOpen = true;
+
                     }
                 });
             }
